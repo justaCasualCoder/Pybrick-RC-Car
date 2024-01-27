@@ -62,12 +62,17 @@
     let latest_cmd = "";
     // Status element
     let status_element = document.getElementById("status");
+    let connect_bt = document.getElementById("connect_bt");
     // Define command queue
     let cmd_queue = Promise.resolve();
+    // Define device and status
+    let device;
+    let connected = false;
     document.getElementById('connect_bt').addEventListener('click', async () => {
     try {
+    if (!connected) {
     // Request Bluetooth devices with Pybricks service filter
-    let device = await navigator.bluetooth.requestDevice({
+    device = await navigator.bluetooth.requestDevice({
     	filters: [{ services: [pybricks_service_uuid] }],
        });
     // Connect to device with GATT
@@ -83,6 +88,20 @@
     // Handle keypresses
     document.addEventListener('keydown', handleKeyPress);
     document.addEventListener('keyup', handleKeyPress);
+    // We are now connected!
+    connected = true;
+    } else {
+        // Define temporary variable
+        let temp_message = b_encoder.encode('bye');
+        // Add 6 to command (6 is the Pybricks code for write to stdin)
+        let message = new Uint8Array([6, ...temp_message]);
+        await send_cmd_pybricks(message)
+        await device.gatt.disconnect()
+        connect_bt.style.backgroundColor = '';
+        connect_bt.innerHTML = 'Connect';
+        status_element.innerHTML = "<span style='color: red;'>Disconnected</span>";
+        connected = false
+    }
     } catch (error) {
         console.error("Error connecting to Pybricks Hub:", error);
     }
@@ -94,6 +113,9 @@
                 ready = 1
                 console.log('Hub Ready')
                 status_element.innerHTML = "<span style='color: green;'>Hub Ready!</span>";
+                // Change it to a disconnect button
+                connect_bt.style.backgroundColor = 'red';
+                connect_bt.innerHTML = 'Disconnect';
         }
         }
     }
