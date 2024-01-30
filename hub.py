@@ -6,6 +6,7 @@ from pybricks.tools import wait, StopWatch
 # Standard MicroPython modules
 from usys import stdin, stdout
 from uselect import poll
+hub = InventorHub()
 # Turning motor
 t_motor = Motor(Port.F)
 # Right Motor
@@ -15,6 +16,8 @@ l_motor = Motor(Port.D)
 # Register input from stdin
 input = poll()
 input.register(stdin)
+# Send battery status
+stdout.buffer.write(f'bty:{hub.battery.voltage() / 7500 * 100}\n')
 while True:
     # Let the web interface know we are ready
     stdout.buffer.write(b"rdy")
@@ -22,7 +25,6 @@ while True:
     while not input.poll(0):
         # Optional: Do something here.
         wait(10)
-
     # Read three bytes.
     cmd = stdin.buffer.read(3)
 

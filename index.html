@@ -16,6 +16,7 @@
      Use your keyboard keys to move the car!
      <br>
     <div id="status"><span style="color: red;">Disconnected</span></div>
+    <div id="bty">Battery Percentage: <span style="color: red;">Unknown</span></div>
 	<button type="button" class="btn btn-primary shadow" id="connect_bt">Connect</button>
 	</div>
     <body class="d-flex flex-column min-vh-100">
@@ -62,12 +63,17 @@
     let latest_cmd = "";
     // Status element
     let status_element = document.getElementById("status");
+    // Bluetooth element
     let connect_bt = document.getElementById("connect_bt");
+    // Battery element
+    let bty_element = document.getElementById("bty");
     // Define command queue
     let cmd_queue = Promise.resolve();
     // Define device and status
     let device;
     let connected = false;
+    // Define Battery status
+    let bty_stat;
     document.getElementById('connect_bt').addEventListener('click', async () => {
     try {
     if (!connected) {
@@ -121,11 +127,17 @@
                 connect_bt.innerHTML = 'Disconnect';
         }
         }
+        if (decoded_string.includes('bty')) {
+            // Extract battery value
+            bty_stat = decoded_string.match(/\d+/)[0]
+            // Update current battery value
+            bty_element.innerHTML = `Battery Percentage: <span style='color: green;'>${bty_stat}</span>`;
+
+        }
     }
     async function send_cmd_pybricks(message) {
         // Wrap the command in a function to be called later in the promise chain
         const sendCommand = async () => {
-            // For testing purposes, log the command to the console
             await bluetooth_char.writeValue(message);
         };
         // Add command to promise chain
