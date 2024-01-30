@@ -100,7 +100,10 @@
         connect_bt.style.backgroundColor = '';
         connect_bt.innerHTML = 'Connect';
         status_element.innerHTML = "<span style='color: red;'>Disconnected</span>";
-        connected = false
+        // We are not connected now
+        connected = false;
+        // The hub is also not ready now
+        ready = false;
     }
     } catch (error) {
         console.error("Error connecting to Pybricks Hub:", error);
