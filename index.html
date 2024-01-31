@@ -130,8 +130,9 @@
         if (decoded_string.includes('bty')) {
             // Extract battery value
             bty_stat = decoded_string.match(/\d+/)[0]
-            // Update current battery value
-            bty_element.innerHTML = `Battery Percentage: <span style='color: green;'>${bty_stat}</span>`;
+            // Update current battery value and determine color based on value
+            bty_element.innerHTML = `Battery Percentage: <span style='color: ${bty_stat >= 50 ? 'green' : bty_stat >= 15 ? 'yellow' : 'red'};'>${bty_stat}</span>`;
+
 
         }
     }
