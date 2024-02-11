@@ -77,11 +77,8 @@ document.addEventListener('keyup', handleKeyPress);
 // We are now connected!
 connected = true;
 } else {
-    // Define temporary variable
-    let temp_message = b_encoder.encode('bye');
-    // Add 6 to command (6 is the Pybricks code for write to stdin)
-    let message = new Uint8Array([6, ...temp_message]);
-    await send_cmd_pybricks(message)
+    // Send goodbye message
+    await send_cmd_pybricks(b_encoder.encode('bye'))
     await device.gatt.disconnect()
     connect_bt.style.backgroundColor = '';
     connect_bt.innerHTML = 'Connect';
@@ -119,7 +116,9 @@ function handle_rx(event) {
 async function send_cmd_pybricks(message) {
     // Wrap the command in a function to be called later in the promise chain
     const sendCommand = async () => {
-        await bluetooth_char.writeValue(message);
+        // Add 6 to command (6 is the Pybricks code for write to stdin)
+        let temp_message = new Uint8Array([6, ...message]);
+        await bluetooth_char.writeValue(temp_message);
     };
     // Add command to promise chain
     cmd_queue = cmd_queue.then(sendCommand).catch(error => {
@@ -136,22 +135,15 @@ function handleKeyPress(event) {
             // If it is a keypress and it is a recognized key
             if (event.type === 'keydown' && movement_cmds_keydown[key]) {
                 latest_cmd = key
-                // Define temporary variable
-                let temp_message = movement_cmds_keydown[key];
-                // Add 6 to command (6 is the Pybricks code for write to stdin)
-                let message = new Uint8Array([6, ...temp_message]);
                 // Call Pybricks command sender
-                send_cmd_pybricks(message);
+                send_cmd_pybricks(movement_cmds_keydown[key]);
             }
         }
     }
     // if it is a key being released
     if (event.type === 'keyup' && movement_cmds_keyup[key]) {
         latest_cmd = ""
-        let temp_message = movement_cmds_keyup[key];
-        // Add 6 to command (6 is the Pybricks code for write to stdin)
-        let message = new Uint8Array([6, ...temp_message]);
-        send_cmd_pybricks(message);
+        send_cmd_pybricks(movement_cmds_keyup[key]);
     }
 }
 
