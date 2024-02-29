@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://yoannmoi.net/nipplejs/javascripts/nipplejs.js"></script>
     </head>
     <body>
       <div class="container-fluid p-5 bg-primary text-white text-center">
@@ -23,6 +24,7 @@
     <div id="status"><span style="color: red;">Disconnected</span></div>
     <div id="bty">Battery Percentage: <span style="color: red;">Unknown</span></div>
 	<button type="button" class="btn btn-primary shadow" id="connect_bt">Connect</button>
+    <div id="joyDiv"></div>
 	</div>
     <body class="d-flex flex-column min-vh-100">
     <footer class="bg-body-tertiary text-center text-lg-start mt-auto">
@@ -49,8 +51,12 @@
             <div class="modal-body">
                 <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" id="mobile_mode">
-                <label class="form-check-label" for="mobile_mode">Enable Mobile Mode? (Currently not functional)</label>
-                </div>
+                <label class="form-check-label" for="mobile_mode">Enable Joystick?</label>
+            </div>
+            <label for="websockethost">WebSocket Host: (Currently not functional)</label>
+            <div>
+                <input type="text" id="websockethost">
+            </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
